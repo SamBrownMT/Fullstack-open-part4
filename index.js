@@ -7,6 +7,11 @@ const middleware = require('./utils/middleware')
 const cors = require('cors')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
+var morgan = require('morgan')
+
+morgan.token('content', (req) => {
+  return JSON.stringify(req.body)
+})
 
 const mongoUrl = config.MONGODB_URI
 mongoose.connect(mongoUrl)
@@ -19,6 +24,7 @@ mongoose.connect(mongoUrl)
 
 app.use(cors())
 app.use(express.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'))
 
 app.use('/api/blogs', blogsRouter)
 
