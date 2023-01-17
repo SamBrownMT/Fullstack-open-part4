@@ -73,7 +73,32 @@ const two = [
   }
 ]
 
+const three = [
+  { _id:    "63c53787a72dabb5d5cf4116",
+    title:  "foo",
+    author: "bar",
+    url:    "baz",
+    likes:  1,
+    __v:    0
+  },
+  { _id:    "63c53787a72dabb5d5cf4117",
+    title:  "crow",
+    author: "bar",
+    url:    "ouch",
+    likes:  1,
+    __v:    0
+  },
+  { _id:    "63c53787a72dabb5d5cf4116",
+    title:  "You a",
+    author: "foo",
+    url:    "burn",
+    likes:  1,
+    __v:    0
+  }
+]
+
 module.exports = {
   one,
-  two
+  two,
+  three
 }
