@@ -1,5 +1,12 @@
 const listHelper = require('../utils/list_helper')
 
+test('dummy returns one', () => {
+  const blogs = []
+
+  const result = listHelper.dummy(blogs)
+  expect(result).toBe(1)
+})
+
 test('totalLikes returns six', () => {
   const blogs = [
   { _id:    "63c53787a72dabb5d5cf4116",
