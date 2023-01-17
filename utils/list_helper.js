@@ -4,6 +4,11 @@ const dummy = (blogs) => {
   return 1
 }
 
+const highestKey = (object) => {
+  return _.maxBy(_.keys(object),
+    (o) => { return object[o] })
+}
+
 const totalLikes = (blogs) => {
   const likesReducer = (sum, blog) => {
     return sum + blog.likes
@@ -24,8 +29,7 @@ const favouriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
   const authors = _.map(blogs, "author")
   const blogsByAuthors = _.countBy(authors)
-  const prominentAuthor = _.maxBy(_.keys(blogsByAuthors),
-    (o) => { return blogsByAuthors[o] })
+  const prominentAuthor = highestKey(blogsByAuthors)
   const numberOfBlogs = _.max(_.valuesIn(blogsByAuthors))
   return {
     author: prominentAuthor,
@@ -36,15 +40,12 @@ const mostBlogs = (blogs) => {
 const mostLikes = (blogs) => {
   const authors = _.map(blogs, "author")
   const authorsWithLikes = {}
-  authors.forEach((author) => {
-    authorsWithLikes[author] = 0
-  })
+  authors.forEach((author) => authorsWithLikes[author] = 0)
   blogs.forEach((blog) => {
     currentAuthor = blog.author
     authorsWithLikes[currentAuthor] += blog.likes
   })
-  const mostLikedAuthor = _.maxBy(_.keys(authorsWithLikes),
-    (o) => { return authorsWithLikes[o] })
+  const mostLikedAuthor = highestKey(authorsWithLikes)
   return {
     author: mostLikedAuthor,
     likes: authorsWithLikes[mostLikedAuthor]
