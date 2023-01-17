@@ -33,10 +33,29 @@ const mostBlogs = (blogs) => {
   }
 }
 
+const mostLikes = (blogs) => {
+  const authors = _.map(blogs, "author")
+  const authorsWithLikes = {}
+  authors.forEach((author) => {
+    authorsWithLikes[author] = 0
+  })
+  blogs.forEach((blog) => {
+    currentAuthor = blog.author
+    authorsWithLikes[currentAuthor] += blog.likes
+  })
+  const mostLikedAuthor = _.maxBy(_.keys(authorsWithLikes),
+    (o) => { return authorsWithLikes[o] })
+  return {
+    author: mostLikedAuthor,
+    likes: authorsWithLikes[mostLikedAuthor]
+  }
+}
+
 
 module.exports = {
   dummy,
   totalLikes,
   favouriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
