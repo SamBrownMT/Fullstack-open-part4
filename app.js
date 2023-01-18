@@ -28,3 +28,5 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :c
 app.use('/api/blogs', blogsRouter)
 
 app.use(middleware.errorHandler)
+
+ module.exports = app
