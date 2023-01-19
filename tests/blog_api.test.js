@@ -65,9 +65,27 @@ test('post a blog adds to database', async () => {
   const urls = response.body.map(r => r.url)
 
   expect(response.body).toHaveLength(initialBlogs.length + 1)
-  expect(urls).toContain(
-    'Hollywood'
-  )
+  expect(urls).toContain('Hollywood')
+})
+
+test('post a blog adds to database', async () => {
+  const newBlog = {
+    title: "No Likey",
+    author: "LancashireMan",
+    url: "Buckshaw"
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  const likes = response.body.map(r => r.likes)
+
+  expect(likes).toContain(0)
 })
 
 afterAll(() => {
