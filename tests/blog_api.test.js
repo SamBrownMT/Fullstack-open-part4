@@ -68,7 +68,7 @@ test('post a blog adds to database', async () => {
   expect(urls).toContain('Hollywood')
 })
 
-test('post a blog adds to database', async () => {
+test('post a blog with no likes defaults to 0', async () => {
   const newBlog = {
     title: "No Likey",
     author: "LancashireMan",
