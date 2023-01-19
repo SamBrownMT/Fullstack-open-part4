@@ -122,6 +122,18 @@ test('can get individual blog page', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
+test('deletes a blog', async () => {
+  blogs = await api.get('/api/blogs') 
+
+  await api
+    .delete(`/api/blogs/${blogs.body[0].id}`)
+    .expect(204)
+
+  await api
+    .get(`/api/blogs/${blogs.body[0].id}`)
+    .expect(404)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
