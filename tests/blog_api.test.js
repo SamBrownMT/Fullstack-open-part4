@@ -62,7 +62,12 @@ test('post a blog adds to database', async () => {
 
   const response = await api.get('/api/blogs')
 
+  const urls = response.body.map(r => r.url)
+
   expect(response.body).toHaveLength(initialBlogs.length + 1)
+  expect(urls).toContain(
+    'Hollywood'
+  )
 })
 
 afterAll(() => {
