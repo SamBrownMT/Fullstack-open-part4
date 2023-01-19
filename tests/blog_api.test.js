@@ -134,6 +134,29 @@ test('deletes a blog', async () => {
     .expect(404)
 })
 
+test('updates a blog', async () => {
+  updatedBlog = {
+    title: "foo",
+    author: "bar",
+    url: "baz",
+    likes:111
+  }
+
+  blogs = await api.get('/api/blogs')
+
+  firstBlogId = blogs.body[0].id
+
+  await api
+    .put(`/api/blogs/${firstBlogId}`)
+    .send(updatedBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  newBlog = await api.get(`/api/blogs/${firstBlogId}`)
+
+  expect(newBlog.body.likes).toEqual(111)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
