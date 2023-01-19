@@ -113,6 +113,15 @@ test('post a blog with no title or url returns 400 status',
     .expect('Content-Type', /application\/json/)
 })
 
+test('can get individual blog page', async () => {
+  response = await api.get('/api/blogs')
+
+  await api
+    .get(`/api/blogs/${response.body[0].id}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
