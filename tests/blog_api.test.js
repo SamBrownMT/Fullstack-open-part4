@@ -88,6 +88,20 @@ test('post a blog with no likes defaults to 0', async () => {
   expect(likes).toContain(0)
 })
 
+test('post a blog with no title or url returns 400 status', 
+  async () => {
+  const noTitle = {
+    author: "LancashireMan",
+    url: "Buckshaw"
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(noTitle)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
