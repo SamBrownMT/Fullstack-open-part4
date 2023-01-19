@@ -95,9 +95,20 @@ test('post a blog with no title or url returns 400 status',
     url: "Buckshaw"
   }
 
+  const noUrl = {
+    title: "No Likey",
+    author: "LancashireMan"
+  }
+
   await api
     .post("/api/blogs")
     .send(noTitle)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  await api
+    .post("/api/blogs")
+    .send(noUrl)
     .expect(400)
     .expect('Content-Type', /application\/json/)
 })
