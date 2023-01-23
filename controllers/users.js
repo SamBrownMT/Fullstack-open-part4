@@ -1,8 +1,15 @@
 const userRouter = require("express").Router()
 const mongoose = require("mongoose")
 const User = require("../models/user")
+const bcrypt = require("bcrypt")
 
-userRouter.post("/", async () => {
+
+userRouter.get("/", async (request, response) => {
+	const users = await User.find({})
+	response.json(users)
+})
+
+userRouter.post("/", async (request, response) => {
 	const { username, name, password } = request.body
 
   const saltRounds = 10
