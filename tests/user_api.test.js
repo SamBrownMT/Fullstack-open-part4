@@ -53,3 +53,16 @@ test("users are returned without passwords", async () => {
 	expect(response.body[0].passwordHash).not.toBeDefined
 	expect(response.body[0].username).toContain("foo")
 })
+
+test("posts a user with too short a username", async () => {
+	newUser = {
+		username: "No",
+		name: "Nein",
+		password: "Allowed"
+	}
+
+	await api
+		.post("/api/users")
+		.send(newUser)
+		.expect(400)
+})
