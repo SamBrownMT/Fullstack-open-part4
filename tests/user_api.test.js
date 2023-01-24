@@ -28,21 +28,21 @@ beforeEach(async () => {
 		.send(initialUsers[1])
 })
 
-test("posts a user", () => {
+test("posts a user", async () => {
 	newUser = {
 		username: "foo",
 		name: "bar",
 		password: "baz"
 	}
 
-	api
+	await api
 		.post("/api/users")
 		.send(newUser)
 		.expect(201)
 })
 
 test("users are returned as json", async () => {
-	api
+	await api
 		.get("/api/users")
 		.expect('Content-Type', /application\/json/)
 })
