@@ -71,3 +71,7 @@ test("users have associated blogs", async () => {
 	users = await api.get("/api/users")
 	expect(users.body[0].blogs).toBeDefined()
 })
+
+afterAll(() => {
+  mongoose.connection.close()
+})
