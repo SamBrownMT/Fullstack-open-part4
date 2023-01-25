@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const api = supertest(app)
 
@@ -20,12 +21,24 @@ const initialBlogs = [
   }
 ]
 
+const initialUsers = [
+  {
+    username: "foo",
+    name: "bar",
+    passwordHash: "baz"
+  },
+  {
+    username: "Hamlet",
+    name: "Shakespeare",
+    passwordHash: "Stratford"
+  }
+]
+
 beforeEach(async () => {
   await Blog.deleteMany({})
-  let blogObject = new Blog(initialBlogs[0])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[1])
-  await blogObject.save()
+  await User.deleteMany({})
+  await User.insertMany(initialUsers)
+  await Blog.insertMany(initialBlogs)
 })
 
 test('blogs are returned as json', async () => {
@@ -155,6 +168,22 @@ test('updates a blog', async () => {
   newBlog = await api.get(`/api/blogs/${firstBlogId}`)
 
   expect(newBlog.body.likes).toEqual(111)
+})
+
+test("new blogs have associated user", async () => {
+  newBlog = {
+    title: "New Blog",
+    author: "I. M. New",
+    url: "Newsville",
+    likes: 3
+  }
+
+  await api
+          .post('/api/blogs')
+          .send(newBlog)
+
+  blogs = await api.get('/api/blogs')
+  expect(blogs.body[2].user).toBeDefined()
 })
 
 afterAll(() => {
