@@ -66,3 +66,8 @@ test("posts a user with too short a username", async () => {
 		.send(newUser)
 		.expect(400)
 })
+
+test("users have associated blogs", async () => {
+	users = await api.get("/api/users")
+	expect(users.body[0].blogs).toBeDefined()
+})
