@@ -170,21 +170,38 @@ test('updates a blog', async () => {
   expect(newBlog.body.likes).toEqual(111)
 })
 
-test("new blogs have associated user", async () => {
+test("new blogs have associated user", async () => { 
   newBlog = {
     title: "New Blog",
     author: "I. M. New",
     url: "Newsville",
     likes: 3
   }
-
   await api
-          .post('/api/blogs')
-          .send(newBlog)
+        .post('/api/blogs')
+        .send(newBlog)
 
-  blogs = await api.get('/api/blogs')
+  let blogs = await api.get('/api/blogs')
+
   expect(blogs.body[2].user).toBeDefined()
 })
+
+test('the new blog displays user\'s username', async () => {
+  newBlog = {
+      title: "New Blog",
+      author: "I. M. New",
+      url: "Newsville",
+      likes: 3
+  }
+  await api
+        .post('/api/blogs')
+        .send(newBlog)
+
+  let blogs = await api.get('/api/blogs')
+
+  expect(blogs.body[2].user.username).toBeDefined()
+}) 
+
 
 afterAll(() => {
   mongoose.connection.close()
