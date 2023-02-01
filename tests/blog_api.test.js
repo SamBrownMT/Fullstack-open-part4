@@ -236,7 +236,7 @@ test('the new blog displays user\'s username', async () => {
 
   let blogs = await api.get('/api/blogs')
 
-  expect(blogs.body[2].user.username).toBeDefined()
+  expect(blogs.body[2].user.username).toBe("foo")
 }) 
 
 
