@@ -3,6 +3,8 @@ const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 const api = supertest(app)
 
@@ -21,20 +23,22 @@ const initialBlogs = [
   }
 ]
 
-const initialUsers = [
-  {
-    username: "foo",
-    name: "bar",
-    passwordHash: "baz"
-  },
-  {
-    username: "Hamlet",
-    name: "Shakespeare",
-    passwordHash: "Stratford"
-  }
-]
-
 beforeEach(async () => {
+  const saltRounds = 10
+  const fooPasswordHash = await bcrypt.hash("baz", saltRounds)
+  const hamletPasswordHash = await bcrypt.hash("Stratford", saltRounds)
+  const initialUsers = [
+    {
+      username: "foo",
+      name: "bar",
+      passwordHash: fooPasswordHash
+    },
+    {
+      username: "Hamlet",
+      name: "Shakespeare",
+      passwordHash: hamletPasswordHash
+    }
+  ]
   await Blog.deleteMany({})
   await User.deleteMany({})
   await User.insertMany(initialUsers)
@@ -67,8 +71,14 @@ test('post a blog adds to database', async () => {
     likes: 2
   }
 
+  loginResponse = await api
+                        .post("/api/login")
+                        .send({username: "foo", password: "baz"})
+  token = loginResponse.body.token
+
   await api
     .post("/api/blogs")
+    .set('authorization',`Bearer ${token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -88,9 +98,15 @@ test('post a blog with no likes defaults to 0', async () => {
     url: "Buckshaw"
   }
 
+  loginResponse = await api
+                        .post("/api/login")
+                        .send({username: "foo", password: "baz"})
+  token = loginResponse.body.token
+
   await api
     .post("/api/blogs")
     .send(newBlog)
+    .set('authorization',`Bearer ${token}`)
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
@@ -113,15 +129,22 @@ test('post a blog with no title or url returns 400 status',
     author: "LancashireMan"
   }
 
+  loginResponse = await api
+                        .post("/api/login")
+                        .send({username: "foo", password: "baz"})
+  token = loginResponse.body.token
+
   await api
     .post("/api/blogs")
     .send(noTitle)
+    .set('authorization',`Bearer ${token}`)
     .expect(400)
     .expect('Content-Type', /application\/json/)
 
   await api
     .post("/api/blogs")
     .send(noUrl)
+    .set('authorization',`Bearer ${token}`)
     .expect(400)
     .expect('Content-Type', /application\/json/)
 })
@@ -177,9 +200,16 @@ test("new blogs have associated user", async () => {
     url: "Newsville",
     likes: 3
   }
+
+  loginResponse = await api
+                        .post("/api/login")
+                        .send({username: "foo", password: "baz"})
+  token = loginResponse.body.token
+
   await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('authorization',`Bearer ${token}`)
 
   let blogs = await api.get('/api/blogs')
 
@@ -193,9 +223,16 @@ test('the new blog displays user\'s username', async () => {
       url: "Newsville",
       likes: 3
   }
+
+  loginResponse = await api
+                        .post("/api/login")
+                        .send({username: "foo", password: "baz"})
+  token = loginResponse.body.token
+
   await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('authorization',`Bearer ${token}`)
 
   let blogs = await api.get('/api/blogs')
 

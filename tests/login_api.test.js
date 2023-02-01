@@ -9,9 +9,8 @@ const api = supertest(app)
 
 beforeEach(async () => {
 	await User.deleteMany({})
-	password = "baz"
 	const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
+  const passwordHash = await bcrypt.hash("baz", saltRounds)
 	await User.insertMany([{
 		username: "foo",
 		name: "bar",
